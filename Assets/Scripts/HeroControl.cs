@@ -8,6 +8,7 @@ public class HeroControl : MonoBehaviour
 
 
     public float moveSpeed;
+    public float moveDamping;
     private Vector2 moveDirection;
 
 
@@ -43,9 +44,13 @@ public class HeroControl : MonoBehaviour
     private void UpdateMove()
     {
         Vector2 input = inputSystem.Player.Move.ReadValue<Vector2>();
+        Debug.Log($"{input.x}, {input.y}");
         input.Normalize();
 
-        rb.AddForce(moveDirection * moveSpeed);
+        moveDirection += input * moveSpeed;
+        moveDirection *= moveDamping;
+
+        rb.linearVelocity = moveDirection;
     }
 
 
