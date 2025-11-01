@@ -14,9 +14,15 @@ public class WorldGenerator : MonoBehaviour
     public float sandThreshold = 0.8f;
     public float stoneThreshold = 0.2f;
 
+
     private void Start()
     {
         GenerateWorld();
+    }
+
+    public void ClearWorld()
+    {
+        tilemap.ClearAllTiles();
     }
 
 
@@ -31,7 +37,7 @@ public class WorldGenerator : MonoBehaviour
                 float noiseValue = Mathf.PerlinNoise(x * noiseScale, y * noiseScale);
                 Debug.Log($"{noiseValue} - {x}:{y}");
 
-                Vector3Int tilePos = new Vector3Int(x, y, 0);
+                Vector3Int tilePos = new Vector3Int(x-(width/2), y-(height/2), 0);
 
                 if (noiseValue > sandThreshold)
                 {
@@ -62,6 +68,10 @@ public class WorldGeneratorEditor : Editor
         if (GUILayout.Button("Перегенерировать"))
         {
             worldGenerator.GenerateWorld();
+        }
+        if (GUILayout.Button("Отчистить"))
+        {
+            worldGenerator.ClearWorld();
         }
     }
 }
