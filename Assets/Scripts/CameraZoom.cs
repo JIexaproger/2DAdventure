@@ -2,15 +2,39 @@ using UnityEngine;
 
 public class CameraZoom : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private InputSystem inputSystem;
+    private Camera camera;
+    public int maxZoom;
+    public int minZoom;
+
+    private void Awake()
     {
-        
+        camera = gameObject.GetComponent<Camera>();
+        inputSystem = new InputSystem();
     }
 
-    // Update is called once per frame
-    void Update()
+
+    private void OnEnable()
     {
-        
+        inputSystem.Enable();
+    }
+    private void OnDisable()
+    {
+        inputSystem.Disable();
+    }
+
+    private void Update()
+    {
+        ZoomScrolling();
+    }
+    
+    private void ZoomScrolling()
+    {
+        var scroll = inputSystem.Player.Scroll.ReadValue<Vector2>();
+
+        if (camera.orthographicSize + scroll.y >= maxZoom && camera.orthographicSize + scroll.y <= minZoom)
+        {
+            camera.orthographicSize += scroll.y;
+        }
     }
 }
