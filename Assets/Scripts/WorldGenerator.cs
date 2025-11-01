@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.Tilemaps;
 
 public class WorldGenerator : MonoBehaviour
@@ -13,12 +14,13 @@ public class WorldGenerator : MonoBehaviour
     public float sandThreshold = 0.8f;
     public float stoneThreshold = 0.2f;
 
-    void Start()
+    private void Start()
     {
         GenerateWorld();
     }
 
-    void GenerateWorld()
+
+    public void GenerateWorld()
     {
         tilemap.ClearAllTiles();
 
@@ -26,7 +28,8 @@ public class WorldGenerator : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                float noiseValue = Mathf.PerlinNoise(x, y);
+                float noiseValue = Mathf.PerlinNoise(x * noiseScale, y * noiseScale);
+                Debug.Log($"{noiseValue} - {x}:{y}");
 
                 Vector3Int tilePos = new Vector3Int(x, y, 0);
 
@@ -43,6 +46,22 @@ public class WorldGenerator : MonoBehaviour
                     tilemap.SetTile(tilePos, grass);
                 }
             }
+        }
+    }
+}
+
+[CustomEditor(typeof(WorldGenerator))]
+public class WorldGeneratorEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+        
+        WorldGenerator worldGenerator = (WorldGenerator)target;
+
+        if (GUILayout.Button("Перегенерировать"))
+        {
+            worldGenerator.GenerateWorld();
         }
     }
 }

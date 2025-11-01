@@ -44,7 +44,6 @@ public class HeroControl : MonoBehaviour
     private void UpdateMove()
     {
         Vector2 input = inputSystem.Player.Move.ReadValue<Vector2>();
-        Debug.Log($"{input.x}, {input.y}");
         input.Normalize();
 
         moveDirection += input * moveSpeed;
