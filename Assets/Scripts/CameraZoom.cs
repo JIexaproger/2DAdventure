@@ -4,7 +4,7 @@ public class CameraZoom : MonoBehaviour
 {
     private InputSystem inputSystem;
     private new Camera camera;
-    public int maxZoom, minZoom;
+    public float maxZoom, minZoom, zoomStep;
 
     private void Awake()
     {
@@ -29,7 +29,7 @@ public class CameraZoom : MonoBehaviour
     
     private void ZoomScrolling()
     {
-        var scroll = inputSystem.Player.Scroll.ReadValue<Vector2>();
+        var scroll = inputSystem.Player.Scroll.ReadValue<Vector2>() * zoomStep;
 
         if (camera.orthographicSize - scroll.y >= maxZoom && camera.orthographicSize - scroll.y <= minZoom)
         {
