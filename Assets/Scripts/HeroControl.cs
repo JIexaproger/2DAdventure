@@ -36,7 +36,7 @@ public class HeroControl : MonoBehaviour
         inputSystem.Player.Attack.performed -= Attack;
     }
     
-    private void Update()
+    private void FixedUpdate()
     {
         UpdateMove();
     }
