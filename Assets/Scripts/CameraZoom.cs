@@ -3,9 +3,8 @@ using UnityEngine;
 public class CameraZoom : MonoBehaviour
 {
     private InputSystem inputSystem;
-    private Camera camera;
-    public int maxZoom;
-    public int minZoom;
+    private new Camera camera;
+    public int maxZoom, minZoom;
 
     private void Awake()
     {
@@ -32,9 +31,9 @@ public class CameraZoom : MonoBehaviour
     {
         var scroll = inputSystem.Player.Scroll.ReadValue<Vector2>();
 
-        if (camera.orthographicSize + scroll.y >= maxZoom && camera.orthographicSize + scroll.y <= minZoom)
+        if (camera.orthographicSize - scroll.y >= maxZoom && camera.orthographicSize - scroll.y <= minZoom)
         {
-            camera.orthographicSize += scroll.y;
+            camera.orthographicSize -= scroll.y;
         }
     }
 }
