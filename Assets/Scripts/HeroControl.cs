@@ -4,6 +4,8 @@ public class HeroControl : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Animator animator;
+    [SerializeField]
+    private Transform spriteTransform;
     private InputSystem inputSystem;
 
 
@@ -48,6 +50,15 @@ public class HeroControl : MonoBehaviour
         Vector2 input = inputSystem.Player.Move.ReadValue<Vector2>();
         input.Normalize();
         input *= moveSpeed;
+
+        if (input.x < 0)
+        {
+            spriteTransform.rotation = Quaternion.Euler(spriteTransform.rotation.x, 180, spriteTransform.rotation.z);
+        }
+        else if (input.x > 0)
+        {
+            spriteTransform.rotation = Quaternion.Euler(spriteTransform.rotation.x, 0, spriteTransform.rotation.z);
+        }
 
         // if (input.magnitude > 0) - не сбрасывается скорость когда 0
         // {
