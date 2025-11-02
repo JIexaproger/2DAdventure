@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class HeroControl : MonoBehaviour
@@ -7,9 +6,10 @@ public class HeroControl : MonoBehaviour
     private InputSystem inputSystem;
 
 
-    public float moveSpeed;
-    public float moveDamping;
+    public float moveSpeed, moveDamping;
     private Vector2 moveDirection;
+
+    public bool isMoveDampingEnable;
 
 
     private void Awake()
@@ -45,9 +45,17 @@ public class HeroControl : MonoBehaviour
     {
         Vector2 input = inputSystem.Player.Move.ReadValue<Vector2>();
         input.Normalize();
+        input *= moveSpeed;
 
-        moveDirection += input * moveSpeed;
-        moveDirection *= moveDamping;
+        if (isMoveDampingEnable)
+        {
+            moveDirection += input;
+            moveDirection *= moveDamping;
+        }
+        else
+        {
+            moveDirection = input;
+        }
 
         rb.linearVelocity = moveDirection;
     }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.Tilemaps;
+using System;
 
 public class WorldGenerator : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class WorldGenerator : MonoBehaviour
     public float noiseScale = 0.1f;
     public float sandThreshold = 0.8f;
     public float stoneThreshold = 0.2f;
+
+    [SerializeField]
+    public int? seed = null;
 
 
     private void Start()
@@ -30,11 +34,16 @@ public class WorldGenerator : MonoBehaviour
     {
         tilemap.ClearAllTiles();
 
+        if (seed is null)
+        {
+            seed = UnityEngine.Random.Range(Int16.MinValue, Int16.MaxValue);
+        }
+
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                float noiseValue = Mathf.PerlinNoise(x * noiseScale, y * noiseScale);
+                float noiseValue = Mathf.PerlinNoise((float)(x + seed) * noiseScale, (float)(y + seed) * noiseScale);
                 Debug.Log($"{noiseValue} - {x}:{y}");
 
                 Vector3Int tilePos = new Vector3Int(x-(width/2), y-(height/2), 0);
