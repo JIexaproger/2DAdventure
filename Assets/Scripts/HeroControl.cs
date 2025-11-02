@@ -3,6 +3,7 @@ using UnityEngine;
 public class HeroControl : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private Animator animator;
     private InputSystem inputSystem;
 
 
@@ -15,6 +16,7 @@ public class HeroControl : MonoBehaviour
     private void Awake()
     {
         inputSystem = new InputSystem();
+        animator = gameObject.GetComponent<Animator>();
         rb = gameObject.GetComponent<Rigidbody2D>();
     }
 
@@ -47,6 +49,9 @@ public class HeroControl : MonoBehaviour
         input.Normalize();
         input *= moveSpeed;
 
+        // if (input.magnitude > 0) - не сбрасывается скорость когда 0
+        // {
+
         if (isMoveDampingEnable)
         {
             moveDirection += input;
@@ -57,7 +62,11 @@ public class HeroControl : MonoBehaviour
             moveDirection = input;
         }
 
+        animator.SetFloat("Speed", input.magnitude);
         rb.linearVelocity = moveDirection;
+
+        // }
+        
     }
 
 
