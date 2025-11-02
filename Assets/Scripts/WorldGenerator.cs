@@ -18,13 +18,25 @@ public class WorldGenerator : MonoBehaviour
 
     private void Start()
     {
-        if (seed == 0) 
+        if (seed == 0)
             seed = UnityEngine.Random.Range(Int16.MinValue, Int16.MaxValue);
+    }
+
+    private void FixedUpdate()
+    {
+        GenerateChunkUnderPlayer();
     }
 
     public void ClearWorld()
     {
         tilemap.ClearAllTiles();
+    }
+
+    public void GenerateChunkUnderPlayer()
+    {
+        var playerChunk = GetPlayerChunk(heroTranform.position.x, heroTranform.position.y);
+        Debug.Log(playerChunk);
+        if (ChunkIsEmpty(playerChunk)) GenerateChunk(playerChunk);
     }
 
     private void SetTile(float noiseValue, Vector3Int tilePos)
@@ -49,7 +61,7 @@ public class WorldGenerator : MonoBehaviour
         {
             for (int y = 0; y < chunkHeight; y++)
             {
-                float noiseValue = Mathf.PerlinNoise(x * noiseScale + seed, y * noiseScale + seed); // получить значение шума в ху с сидом
+                float noiseValue = Mathf.PerlinNoise((chunkPos.x * chunkWight + x) * noiseScale + seed, (chunkPos.y * chunkHeight + y) * noiseScale + seed); // получить значение шума в ху с сидом
                 Vector3Int tilePos = new Vector3Int(chunkPos.x * chunkWight + x, chunkPos.y * chunkHeight + y, 0);
 
                 SetTile(noiseValue, tilePos);
@@ -60,10 +72,12 @@ public class WorldGenerator : MonoBehaviour
 
     private Vector2Int GetPlayerChunk(float xPlayer, float yPlayer)
     {
-        return new Vector2Int((int)xPlayer / chunkWight, (int)yPlayer / chunkHeight);
+        int x = Mathf.FloorToInt(xPlayer / chunkWight);
+        int y = Mathf.FloorToInt(yPlayer / chunkHeight);
+        return new Vector2Int(x, y);
     }
 
-    public bool ChunkIsEmpty(Vector2Int chunkPos)
+    private bool ChunkIsEmpty(Vector2Int chunkPos)
     {
         return tilemap.GetTile(new Vector3Int(chunkPos.x * chunkWight, chunkPos.y * chunkHeight, 0)) is null;
     }
@@ -80,7 +94,7 @@ public class WorldGeneratorEditor : Editor
 
         if (GUILayout.Button("Перегенерировать"))
         {
-            // worldGenerator.GenerateWorld();
+            worldGenerator.GenerateChunkUnderPlayer();
         }
         if (GUILayout.Button("Отчистить"))
         {
