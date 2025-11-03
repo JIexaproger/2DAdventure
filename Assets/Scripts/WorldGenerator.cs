@@ -143,7 +143,7 @@ public class WorldGeneratorEditor : Editor
 
         if (GUILayout.Button("Перегенерировать"))
         {
-            worldGenerator.GenerateChunkUnderPlayer();
+            worldGenerator.GenerateChunkAroundPlayer();
         }
         if (GUILayout.Button("Отчистить"))
         {
