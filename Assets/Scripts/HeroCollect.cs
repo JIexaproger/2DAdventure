@@ -71,8 +71,7 @@ public class HeroCollect : MonoBehaviour
         Debug.Log($"Подобрано: {interactableItem.GetName()}");
         int emptySlot = inventory.FindEmptySlot();
 
-        Item itemData = interactableItem;
-        inventory.Put(emptySlot, itemData); 
+        inventory.Put(emptySlot, new Item(interactableItem.itemObject)); 
         Destroy(interactableItem.gameObject);
 
         CorrectSelectedIndex();

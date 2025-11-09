@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Food", menuName = "Items/Food")]
-public class FoodObject : ItemObject
+public class FoodObject : ItemData
 {
     public int Satiety;
 }

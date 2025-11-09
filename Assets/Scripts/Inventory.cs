@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    public Item[] items;
+    public InventorySlot[] items = new InventorySlot[15];
 
     private void Awake()
     {
-        items = new Item[5];
+        items = new InventorySlot[15];
     }
 
 
-    public void Put(int slot, Item item)
+    public void Add(int slot, InventorySlot item)
     {
         items[slot] = item;
     }
@@ -57,7 +57,7 @@ public class InventoryEditor : Editor
             for (int i = 0; i < 5; i++)
             {
                 // Debug.Log($"Слот {i}: {inventory.Get(i).GetName()} - {inventory.Get(i).GetDescription()}, {inventory.Get(i).Amount}");
-                Debug.Log($"Слот {i}: {inventory.Get(i).ToString()}");
+                Debug.Log($"Слот {i}: {(inventory.Get(i) ? inventory.Get(i).GetName() : "пусто")}");
             }
         }
         if (GUILayout.Button("Показать слот"))
