@@ -70,7 +70,6 @@ public class WorldGenerator : MonoBehaviour
                     GenerateChunk(playerChunk + new Vector2Int(i, j));
             }
         }
-
     }
 
     private void SetTile(float noiseValue, Vector3Int tilePos)

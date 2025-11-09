@@ -6,6 +6,5 @@ public class ItemObject : ScriptableObject
     public string Name;
     public string Description;
     public Sprite Sprite;
-    public int Amount;
     public int MaxAmount;
 }
