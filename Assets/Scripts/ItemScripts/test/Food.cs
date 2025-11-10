@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Food : Item
+public class Food : PickupableItem
 {
     [SerializeField] private FoodObject foodObject;
 

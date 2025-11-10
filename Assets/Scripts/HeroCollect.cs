@@ -6,18 +6,19 @@ public class HeroCollect : MonoBehaviour
 {
     private InputSystem inputSystem;
     private Inventory inventory;
-    private List<Item> pickableItems;
+    private List<PickupableItem> pickableItems;
     private int selectedItemIndex;
     public TMP_Text pickUpText;
+
+    // === Инициализация и настройка ===
 
     private void Awake()
     {
         inputSystem = new InputSystem();
         inventory = gameObject.GetComponent<Inventory>();
-        pickableItems = new List<Item>();
-        selectedItemIndex = 0; // Явная инициализация
+        pickableItems = new List<PickupableItem>();
+        selectedItemIndex = 0;
     }
-
     private void OnEnable()
     {
         inputSystem.Enable();
@@ -25,7 +26,6 @@ public class HeroCollect : MonoBehaviour
         inputSystem.Player.Previous.performed += Previous;
         inputSystem.Player.Next.performed += Next;
     }
-
     private void OnDisable()
     {
         inputSystem.Disable();
@@ -34,9 +34,10 @@ public class HeroCollect : MonoBehaviour
         inputSystem.Player.Next.performed -= Next;
     }
 
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        var item = other.gameObject.GetComponent<Item>();
+        var item = other.gameObject.GetComponent<PickupableItem>();
         if (item != null)
         {
             pickableItems.Add(item);
@@ -44,10 +45,9 @@ public class HeroCollect : MonoBehaviour
             UpdateText();
         }
     }
-
     private void OnTriggerExit2D(Collider2D other)
     {
-        var item = other.gameObject.GetComponent<Item>();
+        var item = other.gameObject.GetComponent<PickupableItem>();
         if (item == null || item.gameObject == null) return; // Предмет уже уничтожен
         
         int index = pickableItems.IndexOf(item);
@@ -62,16 +62,17 @@ public class HeroCollect : MonoBehaviour
         }
     }
 
+
     private void Interact(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
         if (pickableItems.Count == 0) return;
 
-        Item interactableItem = pickableItems[selectedItemIndex];
+        PickupableItem interactableItem = pickableItems[selectedItemIndex];
 
-        Debug.Log($"Подобрано: {interactableItem.GetName()}");
-        int emptySlot = inventory.FindEmptySlot();
+        Debug.Log($"Подобрано: {interactableItem.itemData.Name}");
+        // int emptySlot = inventory.FindEmptySlot();
 
-        inventory.Put(emptySlot, new Item(interactableItem.itemObject)); 
+        inventory.Add(interactableItem.itemData, interactableItem.Amount);
         Destroy(interactableItem.gameObject);
 
         CorrectSelectedIndex();
@@ -122,7 +123,7 @@ public class HeroCollect : MonoBehaviour
     {
         if (pickableItems.Count > 0)
         {
-            pickUpText.text = $"Подобрать {selectedItemIndex + 1}/{pickableItems.Count}: {pickableItems[selectedItemIndex].GetName()}";
+            pickUpText.text = $"Подобрать {selectedItemIndex + 1}/{pickableItems.Count}: {pickableItems[selectedItemIndex].itemData.Name}";
         }
         else
         {

@@ -1,5 +1,5 @@
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
 
 public class Inventory : MonoBehaviour
 {
@@ -11,28 +11,79 @@ public class Inventory : MonoBehaviour
     }
 
 
-    public void Add(int slot, InventorySlot item)
+    public void Set(int slot, ItemData itemData, int amount)
     {
-        items[slot] = item;
+        items[slot] = new InventorySlot(itemData, amount);
     }
-    public Item Remove(int slot)
+
+    public InventorySlot Remove(int slot)
     {
         var result = items[slot];
         items[slot] = null;
         return result;
     }
-    public Item Get(int slot)
+
+    public void Swap(int slotA, int slotB)
+    {
+        InventorySlot inventorySlotA = items[slotA];
+        items[slotA] = items[slotB];
+        items[slotB] = inventorySlotA;
+    }
+
+
+    public InventorySlot Get(int slot)
     {
         return items[slot];
     }
-    public int FindEmptySlot()
+
+
+    public bool Add(ItemData itemData, int amount)
+    {
+        if (amount <= 0) return true;
+
+        int remaining = amount;
+
+        if (TryAddToExistingSlots(itemData, ref remaining))
+            return true;
+
+        return TryAddToEmptySlots(itemData, ref remaining);
+    }
+
+    // Добавление в слоты с тем же itemData
+    private bool TryAddToExistingSlots(ItemData itemData, ref int remaining)
     {
         for (int i = 0; i < items.Length; i++)
         {
-            if (items[i] == null) return i;
-        }
+            var item = items[i];
+            if (item.itemData == itemData && item.amount < item.itemData.MaxAmount)
+            {
+                int space = item.itemData.MaxAmount - item.amount;
+                int added = Mathf.Min(space, remaining);
+                Set(i, itemData, item.amount + added);
+                remaining -= added;
 
-        return -1; // не найден пустой слот
+                if (remaining == 0) return true;
+            }
+        }
+        return false;
+    }
+
+    // Добавление в пустые слоты
+    private bool TryAddToEmptySlots(ItemData itemData, ref int remaining)
+    {
+        for (int i = 0; i < items.Length; i++)
+        {
+            var item = items[i];
+            if (item.IsEmpty)
+            {
+                int added = Mathf.Min(remaining, itemData.MaxAmount);
+                Set(i, itemData, added);
+                remaining -= added;
+
+                if (remaining == 0) return true;
+            }
+        }
+        return remaining == 0;
     }
 }
 
@@ -47,22 +98,20 @@ public class InventoryEditor : Editor
 
         Inventory inventory = (Inventory)target;
 
-        if (GUILayout.Button("Init"))
+        if (GUILayout.Button("Показать слот 1"))
         {
-            inventory.items = new Item[5];
+            var item = inventory.Get(0);
+            Debug.Log($"Слот 0: {item.itemData.Name} - {item.itemData.Description}, {item.amount}");
         }
-
-        if (GUILayout.Button("Показать инвентарь"))
+        if (GUILayout.Button("Показать слот 2"))
         {
-            for (int i = 0; i < 5; i++)
-            {
-                // Debug.Log($"Слот {i}: {inventory.Get(i).GetName()} - {inventory.Get(i).GetDescription()}, {inventory.Get(i).Amount}");
-                Debug.Log($"Слот {i}: {(inventory.Get(i) ? inventory.Get(i).GetName() : "пусто")}");
-            }
+            var item = inventory.Get(1);
+            Debug.Log($"Слот 1: {item.itemData.Name} - {item.itemData.Description}, {item.amount}");
         }
-        if (GUILayout.Button("Показать слот"))
+        if (GUILayout.Button("Показать слот 3"))
         {
-            Debug.Log($"Слот 0: {inventory.Get(0).GetName()} - {inventory.Get(0).GetDescription()}, {inventory.Get(0).Amount}");
+            var item = inventory.Get(2);
+            Debug.Log($"Слот 2: {item.itemData.Name} - {item.itemData.Description}, {item.amount}");
         }
     }
 }
