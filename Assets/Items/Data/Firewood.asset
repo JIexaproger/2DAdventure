@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88a9113b74a32be4585850335b084865, type: 3}
   m_Name: Firewood
   m_EditorClassIdentifier: Assembly-CSharp::ItemObject
-  Name: "\u0411\u0440\u0451\u0432\u043D\u0430"
-  Description: "\u041D\u0430\u0440\u0443\u0431\u043B\u0435\u043D\u043D\u044B\u0435
-    \u0431\u0440\u0451\u0432\u043D\u0430"
-  Sprite: {fileID: 21300000, guid: d4c09f6249786584298698d2af0907dd, type: 3}
-  MaxAmount: 9
+  name: "\u0414\u0440\u043E\u0432\u0430"
+  description: "\u041A\u043E\u043B\u043E\u0442\u044B\u0435 \u0434\u0440\u043E\u0432\u0430"
+  sprite: {fileID: 21300000, guid: d4c09f6249786584298698d2af0907dd, type: 3}
+  maxAmount: 9

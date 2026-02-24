@@ -6,7 +6,7 @@ public class HeroControl : MonoBehaviour
     private Animator animator;
     [SerializeField]
     private Transform spriteTransform;
-    private InputSystem inputSystem;
+    private Input.InputSystem inputSystem;
 
 
     public float moveSpeed, moveDamping;
@@ -17,7 +17,7 @@ public class HeroControl : MonoBehaviour
 
     private void Awake()
     {
-        inputSystem = new InputSystem();
+        inputSystem = Tools.InputSystem.Instance.Input;
         animator = gameObject.GetComponent<Animator>();
         rb = gameObject.GetComponent<Rigidbody2D>();
     }
@@ -75,9 +75,7 @@ public class HeroControl : MonoBehaviour
 
         animator.SetFloat("Speed", input.magnitude);
         rb.linearVelocity = moveDirection;
-
         // }
-        
     }
 
 

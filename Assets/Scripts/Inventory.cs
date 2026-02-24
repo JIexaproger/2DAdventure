@@ -1,9 +1,15 @@
 using UnityEngine;
 using UnityEditor;
+using System;
 
 public class Inventory : MonoBehaviour
 {
-    public InventorySlot[] items = new InventorySlot[15];
+    public int width;
+    public int heigth;
+
+    public event Action<int> OnSlotChanged;
+
+    public InventorySlot[] items;
 
     private void Awake()
     {
@@ -13,13 +19,16 @@ public class Inventory : MonoBehaviour
 
     public void Set(int slot, ItemData itemData, int amount)
     {
-        items[slot] = new InventorySlot(itemData, amount);
+        items[slot].itemData = itemData;
+        items[slot].amount = amount;
+        OnSlotChanged?.Invoke(slot);
     }
 
     public InventorySlot Remove(int slot)
     {
         var result = items[slot];
         items[slot] = null;
+        OnSlotChanged?.Invoke(slot);
         return result;
     }
 
@@ -28,6 +37,8 @@ public class Inventory : MonoBehaviour
         InventorySlot inventorySlotA = items[slotA];
         items[slotA] = items[slotB];
         items[slotB] = inventorySlotA;
+        OnSlotChanged?.Invoke(slotA);
+        OnSlotChanged?.Invoke(slotB);
     }
 
 
@@ -37,14 +48,14 @@ public class Inventory : MonoBehaviour
     }
 
 
-    public bool Add(ItemData itemData, int amount)
+    public int Add(ItemData itemData, int amount)
     {
-        if (amount <= 0) return true;
+        if (amount <= 0 || itemData == null) return 0;
 
         int remaining = amount;
 
         if (TryAddToExistingSlots(itemData, ref remaining))
-            return true;
+            return 0;
 
         return TryAddToEmptySlots(itemData, ref remaining);
     }
@@ -62,6 +73,7 @@ public class Inventory : MonoBehaviour
                 Set(i, itemData, item.amount + added);
                 remaining -= added;
 
+                OnSlotChanged?.Invoke(i); 
                 if (remaining == 0) return true;
             }
         }
@@ -69,7 +81,7 @@ public class Inventory : MonoBehaviour
     }
 
     // Добавление в пустые слоты
-    private bool TryAddToEmptySlots(ItemData itemData, ref int remaining)
+    private int TryAddToEmptySlots(ItemData itemData, ref int remaining)
     {
         for (int i = 0; i < items.Length; i++)
         {
@@ -80,10 +92,11 @@ public class Inventory : MonoBehaviour
                 Set(i, itemData, added);
                 remaining -= added;
 
-                if (remaining == 0) return true;
+                OnSlotChanged?.Invoke(i);
+                if (remaining == 0) return 0;
             }
         }
-        return remaining == 0;
+        return remaining;
     }
 }
 

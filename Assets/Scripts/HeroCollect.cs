@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HeroCollect : MonoBehaviour
 {
-    private InputSystem inputSystem;
+    private Input.InputSystem inputSystem;
     private Inventory inventory;
     private List<PickupableItem> pickableItems;
     private int selectedItemIndex;
@@ -14,7 +14,7 @@ public class HeroCollect : MonoBehaviour
 
     private void Awake()
     {
-        inputSystem = new InputSystem();
+        inputSystem = Tools.InputSystem.Instance.Input;
         inventory = gameObject.GetComponent<Inventory>();
         pickableItems = new List<PickupableItem>();
         selectedItemIndex = 0;

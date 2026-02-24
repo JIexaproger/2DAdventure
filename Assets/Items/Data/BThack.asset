@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88a9113b74a32be4585850335b084865, type: 3}
   m_Name: BThack
   m_EditorClassIdentifier: Assembly-CSharp::ItemObject
-  Name: BThack
-  Description: by bebra_tyan
-  Sprite: {fileID: 21300000, guid: ac43dceb4789e624abb06ca33f409bb0, type: 3}
-  MaxAmount: 99
+  name: bthacklogo.png
+  description: by bebra_tyan
+  sprite: {fileID: 21300000, guid: ac43dceb4789e624abb06ca33f409bb0, type: 3}
+  maxAmount: 99

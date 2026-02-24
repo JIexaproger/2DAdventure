@@ -2,16 +2,15 @@ using UnityEngine;
 
 public class CameraZoom : MonoBehaviour
 {
-    private InputSystem inputSystem;
+    private Input.InputSystem inputSystem;
     private new Camera camera;
     public float maxZoom, minZoom, zoomStep;
 
     private void Awake()
     {
+        inputSystem = Tools.InputSystem.Instance.Input;
         camera = gameObject.GetComponent<Camera>();
-        inputSystem = new InputSystem();
     }
-
 
     private void OnEnable()
     {
